@@ -41,12 +41,15 @@ upgrade() ->
 %% @spec init([]) -> SupervisorTree
 %% @doc supervisor callback.
 init([]) ->
-    Ip = case os:getenv("MOCHIWEB_IP") of false -> "0.0.0.0"; Any -> Any end,   
+    Ip = case os:getenv("MOCHIWEB_IP") of false -> "0.0.0.0"; Any -> Any end,
     Port = case application:get_env(port) of {ok, P} -> P; undefined -> 8001 end,
     WebConfig = [ {ip, Ip}, {port, Port} ],
     Web = {boss_web_controller,
 	   {boss_web_controller, start_link, [WebConfig]},
 	   permanent, 5000, worker, dynamic},
+    Registry = {boss_registry,
+       {boss_registry, start_link, []},
+       permanent, 5000, worker, [boss_registry]},
 
-    Processes = [Web],
+    Processes = [Registry, Web],
     {ok, {{one_for_one, 10, 10}, Processes}}.
