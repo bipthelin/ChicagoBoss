@@ -21,7 +21,7 @@ start_link(Args) ->
 
 init(Options) ->
     TableId = ets:new(?MODULE,[set,named_table,{keypos, 2}]),
-    {ok, #state{ table = TableId, exp_time = boss_proplists:get_value(session_exp_time, Options, 1440) }}.
+    {ok, #state{ table = TableId, exp_time = proplists:get_value(session_exp_time, Options, 1440) }}.
 
 handle_call({session_exists, SessionID}, _From, State) ->
     Exists = dict:is_key(SessionID, State#state.session_dict),
