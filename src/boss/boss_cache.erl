@@ -3,8 +3,7 @@
 -export([stop/0]).
 -export([get/2, set/4, delete/2]).
 
--define(ADAPTER, boss_cache_adapter).
--define(CONNECTION, boss_cache_connection).
+-define(ADAPTER_CONNECTION, boss_cache).
 
 start() ->
     CacheAdapter = boss_env:get_env(cache_adapter, memcached_bin),
@@ -14,25 +13,20 @@ start() ->
 start(Options) ->
     Adapter = proplists:get_value(adapter, Options, boss_cache_adapter_memcached_bin),
     {ok, Conn} = Adapter:start(Options),
-    boss_registry:put(?ADAPTER, Adapter),
-    boss_registry:put(?CONNECTION, Conn).
+    boss_registry:put(?ADAPTER_CONNECTION, {Adapter, Conn}).
 
 stop() ->
-    Adapter = boss_registry:get(?ADAPTER),
-    Connection = boss_registry:get(?CONNECTION),
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:stop(Connection).
 
 set(Prefix, Key, Value, TTL) ->
-    Adapter = boss_registry:get(?ADAPTER),
-    Connection = boss_registry:get(?CONNECTION),
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:set(Connection, Prefix, Key, Value, TTL).
 
 get(Prefix, Key) ->
-    Adapter = boss_registry:get(?ADAPTER),
-    Connection = boss_registry:get(?CONNECTION),
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:get(Connection, Prefix, Key).
 
 delete(Prefix, Key) ->
-    Adapter = boss_registry:get(?ADAPTER),
-    Connection = boss_registry:get(?CONNECTION),
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:delete(Connection, Prefix, Key).
