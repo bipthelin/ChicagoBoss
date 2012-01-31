@@ -8,7 +8,7 @@ start() ->
     start([]).
 
 start(Options) ->
-    CacheServers = boss_proplists:get_value(cache_servers, Options, [{"localhost", 11211, 1}]),
+    CacheServers = proplists:get_value(cache_servers, Options, [{"localhost", 11211, 1}]),
     ok = erlmc:start(CacheServers),
     {ok, undefined}.
 
