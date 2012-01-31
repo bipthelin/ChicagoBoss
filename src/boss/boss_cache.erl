@@ -19,7 +19,7 @@ stop() ->
     {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:stop(Connection).
 
-add(Prefix, Key, Val, TTL) ->
+add(Prefix, Key, Value, TTL) ->
     {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:add(Connection, Prefix, Key, Value, TTL).
 
