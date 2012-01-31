@@ -4,7 +4,8 @@
 
 -export([start/0, start/1, stop/0]).
 -export([get_session_key/0, get_session_exp_time/0]).
--export([new_session/1, get_session_data/1, get_session_data/2, set_session_data/3]).
+-export([get_session_data/1, get_session_data/2]).
+-export([new_session/1, set_session_data/2, set_session_data/3]).
 -export([remove_session_data/2, delete_session/1]).
 
 -define(ADAPTER_CONNECTION, boss_session).
@@ -61,6 +62,12 @@ get_session_data(SessionID) ->
 get_session_data(SessionID, Key) ->
     {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:lookup_session_value(Connection, SessionID, Key).
+
+%% @spec set_session_data(SessionID, Value) -> ok | {error, Reason}
+%% @doc Set session data for the `SessionID'.
+set_session_data(SessionID, Value) ->
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
+    Adapter:set_session_value(Connection, SessionID, Value).
 
 %% @spec set_session_data(SessionID, Key, Value) -> ok | {error, Reason}
 %% @doc Set session data for the `SessionID'.

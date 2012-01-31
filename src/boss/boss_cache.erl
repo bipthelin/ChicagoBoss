@@ -1,7 +1,7 @@
 -module(boss_cache).
 -export([start/0, start/1]).
 -export([stop/0]).
--export([get/2, set/4, delete/2]).
+-export([add/4, get/2, set/4, delete/2]).
 
 -define(ADAPTER_CONNECTION, boss_cache).
 
@@ -18,6 +18,10 @@ start(Options) ->
 stop() ->
     {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
     Adapter:stop(Connection).
+
+add(Prefix, Key, Val, TTL) ->
+    {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),
+    Adapter:add(Connection, Prefix, Key, Value, TTL).
 
 set(Prefix, Key, Value, TTL) ->
     {Adapter, Connection} = boss_registry:get(?ADAPTER_CONNECTION),

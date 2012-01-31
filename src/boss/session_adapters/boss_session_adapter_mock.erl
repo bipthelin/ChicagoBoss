@@ -2,7 +2,8 @@
 -behaviour(boss_session_adapter).
 -export([start/0, start/1, stop/1]).
 -export([session_exists/2, create_session/3, lookup_session/2]).
--export([lookup_session_value/3, set_session_value/4, delete_session/2, delete_session_value/3]).
+-export([lookup_session_value/3, set_session_value/3, set_session_value/4]).
+-export([delete_session/2, delete_session_value/3]).
 
 start() ->
     start([]).
@@ -35,6 +36,9 @@ lookup_session(_, SessionID) ->
 
 lookup_session_value(_, SessionID, Key) ->
     gen_server:call({global, boss_session_mock}, {lookup_session_value, SessionID, Key}).
+
+set_session_value(_, SessionID, Value) ->
+    gen_server:call({global, boss_session_mock}, {set_session_value, SessionID, Value}).
 
 set_session_value(_, SessionID, Key, Value) ->
     gen_server:call({global, boss_session_mock}, {set_session_value, SessionID, Key, Value}).
