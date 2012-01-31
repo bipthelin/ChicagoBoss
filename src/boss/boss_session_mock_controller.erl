@@ -57,7 +57,7 @@ handle_call({lookup_session_value, SessionID, Key}, _From, State) ->
         [S] -> S#boss_session.data;
         [] -> []
     end,
-    {reply, boss_proplists:get_value(Key, Data), State};
+    {reply, proplists:get_value(Key, Data), State};
 handle_call({set_session_value, SessionID, Value}, _From, State) ->
     ets:insert(State#state.table, #boss_session{sid=SessionID,data=Value}),
     {reply, ok, State};
