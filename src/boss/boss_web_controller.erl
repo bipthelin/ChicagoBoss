@@ -104,9 +104,10 @@ init(Config) ->
     Pid = case ServerMod of
         mochiweb_http -> mochiweb_http:start([{ssl, SSLEnable}, {ssl_opts, SSLOptions} | ServerConfig]);
         misultin ->
+            MisultinConfig = [{max_connections, 8192} | ServerConfig],
             case SSLEnable of
-                true -> misultin:start_link([{ssl, SSLOptions} | ServerConfig]);
-                false -> misultin:start_link(ServerConfig)
+                true -> misultin:start_link([{ssl, SSLOptions} | MisultinConfig]);
+                false -> misultin:start_link(MisultinConfig)
             end
     end,
     {ok, #state{ http_pid = Pid, is_master_node = (ThisNode =:= MasterNode) }, 0}.
